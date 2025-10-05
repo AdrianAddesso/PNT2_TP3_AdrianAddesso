@@ -17,5 +17,5 @@ Para la comunicación con mockapi.io utilizar axios.
 Utilizar Bootstrap como framework css del sitio.
 <!--Magic link for API cloning https://mockapi.io/clone/68db27bd23ebc87faa321d8d-->
 
-[] Enviar por email a danielsanchez68@hotmail.com el link al repo de cada uno de
+[x] Enviar por email a danielsanchez68@hotmail.com el link al repo de cada uno de
 ustedes con el ejercicio resuelto

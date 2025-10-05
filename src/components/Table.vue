@@ -1,5 +1,8 @@
 <template>
     <section class="containerd mt-2">
+        <div class="text-start mt-2 mb-2">
+            <button class="btn btn-success" @click="obtener">Actualizar</button>
+        </div>
         <div v-if="noFetch" class="alert alert-light col-8" role="alert"> {{ wText }}</div>
         <div v-else-if="errorCarga" class="alert alert-danger col-8" role="alert"> {{ aText }}</div>
 
@@ -14,7 +17,7 @@
                 </tr>
             </thead>
             <tbody>
-                    <tr v-for="(usuario, index) in usuarios" :key="index">
+                    <tr v-for="(usuario, index) in paginatedUsuarios" :key="usuario.id">
                         <td>{{ usuario.id }}</td>
                         <td>{{ usuario.nombre }}</td>
                         <td>{{ usuario.email }}</td>
@@ -22,9 +25,19 @@
                     </tr>
             </tbody>
         </table>
-        <div class="text-start mt-2">
-            <button class="btn btn-success" @click="obtener">Actualizar</button>
-        </div>
+                <nav v-if="usuarios.length > pageSize" aria-label="Page navigation example" class="pagination mt-2">
+                    <ul class="pagination">
+                        <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                        <button class="page-link" @click="currentPage--" :disabled="currentPage === 1"> Prev</button>
+                        </li>  
+                        <li class="page-item" v-for="page in totalPages" :key="page" :class="{ active: currentPage === page }">
+                            <button class="page-link" @click="currentPage = page">{{ page }}</button>
+                        </li>
+                        <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+                            <button class="page-link" @click="currentPage++" :disabled="currentPage === totalPages">Next</button>
+                        </li>
+                    </ul>
+                </nav>
     </section>
 </template>
 
@@ -41,6 +54,8 @@
                 aText: "🚨 Algo falló al buscar los usuarios. Contacte a soporte.",
                 servUsuarios: new ServicioUsuarios,
                 usuarios: [],
+                currentPage: 1,
+                pageSize: 10,
             }
         },
         methods: {
@@ -75,9 +90,16 @@
             },
         },
         computed: {
+            paginatedUsuarios() {
+                const start = (this.currentPage - 1) * this.pageSize;
+                const end = start + this.pageSize;
+                return this.usuarios.slice(start, end);
+            },
+            totalPages() {
+                return Math.ceil(this.usuarios.length / this.pageSize);
+            }
         }
     };
-
 </script>
 
 <style scoped>
